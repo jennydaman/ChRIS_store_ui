@@ -114,9 +114,8 @@ export class Plugins extends Component {
     const searchParams = {
       limit: 20,
       offset: 0,
-      name_title_category:name,
-
- 
+      name_title_category: name,
+    };
 
     return new Promise(async (resolve, reject) => {
       let plugins;
@@ -136,7 +135,7 @@ export class Plugins extends Component {
       } catch (e) {
         return reject(e);
       }
-      
+
       return resolve(plugins.data);
     });
   }
