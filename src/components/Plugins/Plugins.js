@@ -107,7 +107,7 @@ export class Plugins extends Component {
     }
   }
 
-  fetchPlugins() {
+  async fetchPlugins() {
 
     const params = new URLSearchParams(window.location.search);
     const name = params.get("q"); //get value searched from the URL
@@ -117,27 +117,18 @@ export class Plugins extends Component {
       name_title_category: name,
     };
 
-    return new Promise(async (resolve, reject) => {
-      let plugins;
-      try {
-        // add plugins to pluginList as they are received
-        plugins = await this.client.getPlugins(searchParams);
+    // add plugins to pluginList as they are received
+    const plugins = await this.client.getPlugins(searchParams);
 
-        if (this.mounted) {
-          this.setState((prevState) => {
-            const prevPluginList = prevState.pluginList
-              ? prevState.pluginList
-              : [];
-            const nextPluginList = prevPluginList.concat(plugins.data);
-            return { pluginList: nextPluginList };
-          });
-        }
-      } catch (e) {
-        return reject(e);
-      }
+    if (this.mounted) {
+      this.setState((prevState) => {
+        const prevPluginList = prevState.pluginList || [];
+        const nextPluginList = prevPluginList.concat(plugins.data);
+        return { pluginList: nextPluginList };
+      });
+    }
 
-      return resolve(plugins.data);
-    });
+    return plugins.data;
   }
 
   async fetchPluginStars() {
